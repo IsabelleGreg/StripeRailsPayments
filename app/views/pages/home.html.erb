@@ -14,46 +14,74 @@
 
 		<h1> Hello World! </h1>
 
-		<div class="container">
-		  <button type="button" class="btn">Basic</button>
-		  <button type="button" class="btn btn-default">Default</button>
-		  <button type="button" class="btn btn-primary">Primary</button>   
-		</div>
 
 		<!-- Stripe -->
 		<%= form_tag charges_path, id:'chargeForm' do %>
 		 
+		 	<!-- display errors -->
 		    <% if flash[:error].present? %>
-		      <div id="error_explanation">
-		        <p><%= flash[:error] %></p>
-		      </div>
+		    	<div id="error_explanation">
+		        	<p><%= flash[:error] %></p>
+		      	</div>
 		    <% end %>
-		
-
-			<script src="https://checkout.stripe.com/checkout.js"></script>
+			
+			<!-- form fields -->
+		    <article>
+				<%= label_tag(:amount, 'Donation Amount:') %>
+			   	<%= text_field_tag(:amount) %>
+			</article>
 			<%= hidden_field_tag 'stripeToken' %>
 			<%= hidden_field_tag 'stripeEmail' %>
 			<%= hidden_field_tag 'amount', 500 %>
-			<button id="btn-buy" type="button" class="btn btn-primary">Sponsor this game!</button>
 
+			<!-- button launches form -->
+			<button id='donateButton' type="button" class="btn btn-primary">Sponsor this game!</button>
+			
+			<!-- necessary scripts for the form submit-->
+			<script src="https://checkout.stripe.com/checkout.js"></script>
+			
 			<script>
 				
+				//handler object is configured with a few options, including the public API key and a call back for the token.
 				var handler = StripeCheckout.configure({
 					key: '<%= Rails.configuration.stripe[:publishable_key] %>',
+					locale: 'auto',
+  					name: 'Be A Game Changer',
+					description: 'Sponsor this game',
 					token: function(token, arg) {
 						document.getElementById("stripeToken").value = token.id;
 						document.getElementById("stripeEmail").value = token.email;
 						document.getElementById("chargeForm").submit();
 					}
 				});
-				document.getElementById('btn-buy').addEventListener('click', function(e) {
-					handler.open({
-						name: 'Be A Game Changer',
-						description: 'Sponsor this game',
-						amount: document.getElementById("amount").value
-					});
+				
+				//when the user clicks on the button,
+				//the javascript verifies the amount specified and 
+				//if valid, launches the chekout.
+				$('#donateButton').on('click', function(e) {
 					e.preventDefault();
-				})
+
+					$('#error_explanation').html('');
+
+					var amount = $('input#amount').val();
+					amount = amount.replace(/\$/g, '').replace(/\,/g, '')
+
+					amount = parseFloat(amount);
+
+					if (isNaN(amount)) {
+					    $('#error_explanation').html('<p>Please enter a valid amount in USD ($).</p>');
+					}
+					else if (amount < 5.00) {
+					    $('#error_explanation').html('<p>Donation amount must be at least $5.</p>');
+					    }
+					else {
+					    amount = amount * 100; // Needs to be an integer!
+					    handler.open({
+					    amount: Math.round(amount)
+					    })
+					}
+				});
+
 
 			</script>
 
