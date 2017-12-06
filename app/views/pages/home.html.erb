@@ -82,6 +82,10 @@
 					}
 				});
 
+				// Close Checkout on page navigation
+				$(window).on('popstate', function() {
+  					handler.close();
+				});
 
 			</script>
 

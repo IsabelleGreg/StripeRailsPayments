@@ -1,24 +1,31 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
 
-Things you may want to cover:
 
-* Ruby version
+RUBY
+* download Ruby version 2.2.6
 
-* System dependencies
 
-* Configuration
 
-* Database creation
+STRIPE
+* create a free Stripe account: https://stripe.com/ca
 
-* Database initialization
+* go to your dashboard and find out your...
+	- test publishable_key: 'pk_test_somekey' 
+	- test secret_key:  'sk_test_somekey'
 
-* How to run the test suite
 
-* Services (job queues, cache servers, search engines, etc.)
 
-* Deployment instructions
+GET THE APP RUNNING
+* unzip the app file, place it anywhere, open your terminal in that directory
 
-* ...
+* run 'bundle install' to install all the gem files
+
+* boot the app with your Stripe credentials:
+     in the Terminal run...
+     PUBLISHABLE_KEY=pk_test_somekey \\ SECRET_KEY=sk_test_somekey bundle exec rails s
+
+* run 'rails server' to get the website running locally
+* type in 'localhost:300' in your browser to see the web app
+
+
