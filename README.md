@@ -28,4 +28,10 @@ GET THE APP RUNNING
 * run 'rails server' to get the website running locally
 * type in 'localhost:300' in your browser to see the web app
 
+TEST THE PAYMENT FORM
+* use any email address with a valid syntax ex: something@gmail.com
+* use the test card: "4242 4242 4242 4242"
+* use any valid expiration date that occurs in the future
+* type any 3 digit CVC ex: 123
+
 
