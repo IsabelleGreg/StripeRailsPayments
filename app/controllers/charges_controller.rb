@@ -21,7 +21,10 @@ class ChargesController < ApplicationController
 	    redirect_to new_charge_path
 	    return
 	  end
-	 
+	  
+	  #create product object
+	  product = Product.find(params[:product_id])
+
 	  #create the customer object
 	  customer = Stripe::Customer.create(
 	    :email => params[:stripeEmail],
