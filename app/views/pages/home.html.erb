@@ -1,1 +1,66 @@
-Hello World!
+
+<html>
+
+	<head>
+	  <title>Stripe Payments</title>
+	  <meta charset="utf-8">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	 
+
+	</head>
+
+	<body>
+
+		<h1> Hello World! </h1>
+
+		<div class="container">
+		  <button type="button" class="btn">Basic</button>
+		  <button type="button" class="btn btn-default">Default</button>
+		  <button type="button" class="btn btn-primary">Primary</button>   
+		</div>
+
+		<!-- Stripe -->
+		<%= form_tag charges_path, id:'chargeForm' do %>
+		 
+		    <% if flash[:error].present? %>
+		      <div id="error_explanation">
+		        <p><%= flash[:error] %></p>
+		      </div>
+		    <% end %>
+		
+
+			<script src="https://checkout.stripe.com/checkout.js"></script>
+			<%= hidden_field_tag 'stripeToken' %>
+			<%= hidden_field_tag 'stripeEmail' %>
+			<%= hidden_field_tag 'amount', 500 %>
+			<button id="btn-buy" type="button" class="btn btn-primary">Sponsor this game!</button>
+
+			<script>
+				
+				var handler = StripeCheckout.configure({
+					key: '<%= Rails.configuration.stripe[:publishable_key] %>',
+					token: function(token, arg) {
+						document.getElementById("stripeToken").value = token.id;
+						document.getElementById("stripeEmail").value = token.email;
+						document.getElementById("chargeForm").submit();
+					}
+				});
+				document.getElementById('btn-buy').addEventListener('click', function(e) {
+					handler.open({
+						name: 'Be A Game Changer',
+						description: 'Sponsor this game',
+						amount: document.getElementById("amount").value
+					});
+					e.preventDefault();
+				})
+
+			</script>
+
+		  		 
+		<% end %>
+
+
+	</body>
+	
+</html>
